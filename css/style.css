@@ -1,0 +1,59 @@
+:root {
+	font: menu;
+	font-size: 116%;
+	max-width: 50em;
+	margin: 0 auto;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: inherit;
+}
+
+input[type="button"],
+input[type="file"] {
+	width: 100%;
+	padding: 1em;
+	font-size: 116%;
+	cursor: pointer;
+}
+
+input[type="file"] {
+	background: #eef;
+}
+
+form ul,
+form li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+details,
+p {
+	margin: 1em 0 0 0;
+}
+
+summary + p,
+p:first-child {
+	margin-top: 0;
+}
+
+p:last-child {
+	margin-bottom: 1em;
+}
+
+kbd {
+	display: inline-block;
+	min-width: 3em;
+	margin: 0.125em;
+	padding: 0.25em;
+	border: 2px outset #888;
+	border-radius: 0.25em;
+	background: #111;
+	color: #fff;
+	text-align: center;
+}

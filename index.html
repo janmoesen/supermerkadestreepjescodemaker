@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>Streepjescodemaker voor de Supermerkade</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/papaparse.min.js"></script>
+
+<h1>Streepjescodemaker voor de Supermerkade</h1>
+
+<form>
+	<p>Selecteer hier het CSV-bestand dat je geëxporteerd hebt uit de Social Shop.
+	(<a href="csv/voorbeeld.csv">Voorbeeld</a>.)
+
+	<p><input type="file">
+
+	<!-- PapaParse should be intelligent enough not to need this:
+	<details open>
+		<summary>Geavanceerde opties</summary>
+		<p>Scheidingsteken:
+		<ul>
+			<li><label><input type="radio" name="separator" value=";" checked> <kbd>;</kbd> (puntkomma, standaard in Excel)</label></li>
+			<li><label><input type="radio" name="separator" value=","> <kbd>,</kbd> (komma)</label></li>
+			<li><label><input type="radio" name="separator" value="&#9;"> <kbd>Tab</kbd></label></li>
+		</ul>
+	</details>
+	-->
+
+	<p><input type="button" value="✨ Maak streepjescodes ✨">
+</form>
+
+<div id="output"></div>
+
+<script src="js/script.js"></script>
