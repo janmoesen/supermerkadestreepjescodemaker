@@ -150,7 +150,7 @@
 
 							barcodeContainer.removeAttribute('style');
 						} catch (e) {
-							addError(`“${description}” (${sku}): ${typeof e === 'string' ? e : JSON.stringify(e, null, ' ')}`);
+							addError(`JsBarcode: ${typeof e === 'string' ? e : JSON.stringify(e, null, ' ')} in record: ${JSON.stringify(recordObject, null, ' ')}`);
 						}
 					}
 
