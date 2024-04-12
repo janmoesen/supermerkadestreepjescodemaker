@@ -77,10 +77,13 @@ input[type="file"] {
 	grid-template-areas:
 		"description   description   description"
 		"regularPrice  sku           socialPrice"
-		".             .             socialText";
+		"barcode       barcode       socialText";
 	width: 70mm;
 	outline: 1px solid #888;
 	font: "Helvetica", "Arial", sans-serif;
+	font-size: 4.5mm;
+	background: #fff;
+	color: #000;
 }
 
 .label .description {
@@ -107,14 +110,15 @@ input[type="file"] {
 
 .label .socialPrice,
 .label .regularPrice {
-	font-weight: bold;
+	white-space: pre;
 	font-size: 6mm;
+	font-weight: bold;
 }
 
 .label .socialPrice::first-letter,
 .label .regularPrice::first-letter {
-	font-weight: 200;
 	font-size: 5mm;
+	font-weight: 200;
 }
 
 .label .socialText {
@@ -132,4 +136,14 @@ input[type="file"] {
 
 .label .barcode {
 	grid-area: barcode;
+}
+
+@media print {
+	body > :not(#labels) {
+		display: none;
+	}
+
+	.label {
+		outline: 0;
+	}
 }

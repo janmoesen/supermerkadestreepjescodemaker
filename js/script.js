@@ -80,7 +80,10 @@
 
 					/* Only keep the first barcode. The field seems to contain the
 					 * 5-digit SKU as well, and lots of `ESC` control codes. */
-					barcode = barcode.split(/[\n\u001D]/)[0];
+					barcode = barcode.replace(/[\n\u001C\u001D]/g, ' ').trim().split(' ')[0];
+
+					/* Some barcodes incorrectly have an extra digit in front. */
+					barcode = barcode.replace(/^[01](\d{13})$/, '$1');
 
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
@@ -110,14 +113,45 @@
 					skuContainer.textContent = sku;
 					labelContainer.append(skuContainer);
 
-					const barcodeContainer = document.createElement('svg');
-					barcodeContainer.classList.add('barcode');
-					// TODO: JSBarcode it
+					if (barcode.length > 5) {
+						const barcodeContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+						barcodeContainer.setAttribute('width', '100%');
+						barcodeContainer.setAttribute('height', '100%');
+						barcodeContainer.classList.add('barcode');
+						labelContainer.append(barcodeContainer);
+
+						try {
+							JsBarcode(barcodeContainer, barcode, {
+								format: 'EAN13',
+								flat: true,
+								displayValue: false,
+								width: 1,
+								height: 15,
+							});
+						} catch (e) {
+							const pre = document.createElement('pre');
+							pre.textContent = `“${description}” (${sku}): `;
+							pre.textContent += typeof e === 'string'
+								? e.trim()
+								: JSON.stringify(e, null, '  ');
+							if (!errorsContainer.firstChild) {
+								errorsContainer.innerHTML = '<details><summary>Foutmeldingen</summary></details>';
+							}
+							errorsContainer.firstChild.append(pre);
+						}
+					}
 
 					const li = document.createElement('li');
 					li.append(labelContainer);
 					labelsContainer.firstChild.append(li);
 				});
+
+
+				/* Show the number of errors. */
+				const numErrors = document.querySelectorAll('#errors summary ~ pre').length;
+				if (numErrors) {
+					document.querySelector('#errors summary').textContent += ` (${numErrors})`;
+				}
 			}
 		});
 
