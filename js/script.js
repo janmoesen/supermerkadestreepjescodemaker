@@ -7,6 +7,19 @@
 	const rawDataContainer = document.getElementById('rawData');
 	const labelsContainer = document.getElementById('labels');
 
+	function addError(error) {
+		const pre = document.createElement('pre');
+		pre.textContent = typeof error === 'string'
+			? error.trim()
+			: JSON.stringify(error, null, '  ');
+
+		if (!errorsContainer.firstChild) {
+			errorsContainer.innerHTML = '<details><summary>Foutmeldingen</summary></details>';
+		}
+
+		errorsContainer.firstChild.append(pre);
+	}
+
 	/* Handle file input. */
 	fileInput.oninput = event => {
 		btnGenerate.disabled = true;
@@ -29,12 +42,7 @@
 			complete: function(results) {
 				/* Show the errors, if any. */
 				errorsContainer.textContent = '';
-				if (results.errors.length) {
-					const pre = document.createElement('pre');
-					pre.textContent = JSON.stringify(results.errors, null, '  ');
-					errorsContainer.innerHTML = '<details><summary>Foutmeldingen</summary></details>';
-					errorsContainer.firstChild.append(pre);
-				}
+				results.errors.forEach(error => addError(error));
 
 				/* Show the raw data. */
 				rawDataContainer.textContent = '';
@@ -131,15 +139,7 @@
 
 							barcodeContainer.removeAttribute('style');
 						} catch (e) {
-							const pre = document.createElement('pre');
-							pre.textContent = `“${description}” (${sku}): `;
-							pre.textContent += typeof e === 'string'
-								? e.trim()
-								: JSON.stringify(e, null, '  ');
-							if (!errorsContainer.firstChild) {
-								errorsContainer.innerHTML = '<details><summary>Foutmeldingen</summary></details>';
-							}
-							errorsContainer.firstChild.append(pre);
+							addError(`“${description}” (${sku}): ${typeof e === 'string' ? e : JSON.stringify(e, null, ' ')}`);
 						}
 					}
 
