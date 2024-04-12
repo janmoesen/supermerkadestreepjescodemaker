@@ -1,6 +1,6 @@
 /* General styling */
 :root {
-	max-width: 300mm;
+	max-width: 220mm;
 	margin: 0 auto;
 	font: menu;
 	font-size: 116%;
@@ -58,7 +58,7 @@ input[type="file"] {
 
 /* Labels */
 #labels {
-	width: 291mm;
+	width: 220mm;
 }
 
 #labels ul,
@@ -79,9 +79,11 @@ input[type="file"] {
 		"regularPrice  sku           socialPrice"
 		"barcode       barcode       socialText";
 	width: 70mm;
+	height: 32mm;
+	overflow: hidden;
 	outline: 1px solid #888;
 	font: "Helvetica", "Arial", sans-serif;
-	font-size: 4.5mm;
+	font-size: 5mm;
 	background: #fff;
 	color: #000;
 }
@@ -89,7 +91,7 @@ input[type="file"] {
 .label .description {
 	grid-area: description;
 	width: 100%;
-	height: 3em;
+	height: 2.6em;
 	overflow: hidden;
 	text-align: center;
 	background: #bbb;
@@ -136,6 +138,8 @@ input[type="file"] {
 
 .label .barcode {
 	grid-area: barcode;
+	transform-origin: top left;
+	transform: scaleX(1.75) translate(-1mm, -1mm);
 }
 
 @media print {

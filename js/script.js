@@ -126,8 +126,10 @@
 								flat: true,
 								displayValue: false,
 								width: 1,
-								height: 15,
+								height: 25,
 							});
+
+							barcodeContainer.removeAttribute('style');
 						} catch (e) {
 							const pre = document.createElement('pre');
 							pre.textContent = `“${description}” (${sku}): `;
