@@ -58,6 +58,15 @@
 				results.data.forEach(record => {
 					let [description, barcode, sku, socialPrice, regularPrice] = record;
 
+					/* Make sure all the expected columns are defined. */
+					const recordObject = {description, barcode, sku, socialPrice, regularPrice};
+					for (let [key, value] of Object.entries(recordObject)) {
+						if (typeof value === 'undefined') {
+							addError(`Missing ${key} in record: ${JSON.stringify(recordObject, null, ' ')}`);
+							return;
+						}
+					}
+
 					/* Make sure there is at least 1 digit before the decimal comma.
 					 * `0,90` gets exported as `,9`. */
 					if (socialPrice.match(/^,/)) {
