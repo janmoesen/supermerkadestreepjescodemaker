@@ -105,6 +105,9 @@
 						regularPrice = `${regularPrice}00`.replace(/(,..).*/, '$1');
 					}
 
+					/* Fix a pet peeve of mine: `Ij` → `IJ` / `Ĳ`. */
+					description = description.replace(/\bIj/g, 'IJ');
+
 					/* Only keep the first barcode. The field seems to contain the
 					 * 5-digit SKU as well, and lots of `ESC` control codes. */
 					barcode = barcode.replace(/[\n\u001C\u001D]/g, ' ').trim().split(' ')[0];
