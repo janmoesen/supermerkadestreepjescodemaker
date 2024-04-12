@@ -69,6 +69,14 @@
 						}
 					}
 
+					/* Do a price check on aisle 4. */
+					for (let [key, value] of Object.entries({socialPrice, regularPrice})) {
+						if (value === '' || value === ',' || value === '0') {
+							addError(`Missing ${key} in record: ${JSON.stringify(recordObject, null, ' ')}`);
+							return;
+						}
+					}
+
 					/* Make sure there is at least 1 digit before the decimal comma.
 					 * `0,90` gets exported as `,9`. */
 					if (socialPrice.match(/^,/)) {
