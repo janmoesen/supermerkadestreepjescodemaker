@@ -25,6 +25,7 @@
 
 		/* Parse the CSV. */
 		Papa.parse(fileInput.files[0], {
+			skipEmptyLines: 'greedy',
 			complete: function(results) {
 				/* Show the errors, if any. */
 				errorsContainer.textContent = '';
@@ -48,12 +49,6 @@
 				labelsContainer.textContent = '';
 				results.data.forEach(record => {
 					let [description, barcode, sku, socialPrice, regularPrice] = record;
-
-					/* The last record is empty when the file (properly) ends with a
-					 * newline, so skip that. */
-					if (typeof barcode === 'undefined') {
-						return;
-					}
 
 					/* Make sure there is at least 1 digit before the decimal comma.
 					 * `0,90` gets exported as `,9`. */
