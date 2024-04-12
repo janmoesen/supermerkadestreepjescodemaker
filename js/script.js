@@ -40,7 +40,7 @@
 				if (results.data.length) {
 					const pre = document.createElement('pre');
 					pre.textContent = JSON.stringify(results.data, null, '  ');
-					rawDataContainer.innerHTML = '<details><summary>Data</summary></details>';
+					rawDataContainer.innerHTML = '<details><summary>Onbewerkte gegevens</summary></details>';
 					rawDataContainer.firstChild.append(pre);
 				}
 
