@@ -89,14 +89,37 @@
 
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
-					const pre = document.createElement('pre');
-					pre.textContent = JSON.stringify({description, barcode, sku, socialPrice, regularPrice}, null, ' ');
-					labelContainer.append(pre);
+
+					const descriptionContainer = document.createElement('div');
+					descriptionContainer.classList.add('description');
+					descriptionContainer.textContent = description;
+					labelContainer.append(descriptionContainer);
+
+					const regularPriceContainer = document.createElement('div');
+					regularPriceContainer.classList.add('regularPrice');
+					regularPriceContainer.textContent = `€ ${regularPrice}`;
+					labelContainer.append(regularPriceContainer);
+
+					const socialPriceContainer = document.createElement('div');
+					socialPriceContainer.classList.add('socialPrice');
+					socialPriceContainer.textContent = `€ ${socialPrice}`;
+					labelContainer.append(socialPriceContainer);
+
+					const socialTextContainer = document.createElement('div');
+					socialTextContainer.classList.add('socialText');
+					socialTextContainer.textContent = 'sociaal';
+					labelContainer.append(socialTextContainer);
+
+					const skuContainer = document.createElement('div');
+					skuContainer.classList.add('sku');
+					skuContainer.textContent = sku;
+					labelContainer.append(skuContainer);
+
+					const barcodeContainer = document.createElement('svg');
+					barcodeContainer.classList.add('barcode');
+					// TODO: JSBarcode it
 
 					labelsContainer.append(labelContainer);
-
-					// JSBarcode it
-					//const svg = document.createElement('svg');
 				});
 			}
 		});
