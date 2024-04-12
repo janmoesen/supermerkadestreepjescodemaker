@@ -1,3 +1,4 @@
+/* General styling */
 :root {
 	max-width: 300mm;
 	margin: 0 auto;
@@ -15,18 +16,6 @@ h1, h2, h3, h4, h5, h6 {
 	font-size: inherit;
 }
 
-input[type="button"],
-input[type="file"] {
-	width: 100%;
-	padding: 1em;
-	font-size: 116%;
-	cursor: pointer;
-}
-
-input[type="file"] {
-	background: #eef;
-}
-
 details,
 p {
 	margin: 1em 0 0 0;
@@ -41,6 +30,29 @@ p:last-child {
 	margin-bottom: 1em;
 }
 
+/* Form controls */
+input[type="button"],
+input[type="file"] {
+	width: 100%;
+	padding: 1em;
+	font-size: 116%;
+	cursor: pointer;
+}
+
+input[type="file"] {
+	background: #eef;
+}
+
+/* Errors */
+#errors:not(:empty) {
+	margin-bottom: 2em;
+}
+
+#errors pre {
+	margin: 0.25em 0;
+}
+
+/* Labels */
 #labels {
 	width: 291mm;
 }
