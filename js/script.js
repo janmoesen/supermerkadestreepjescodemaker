@@ -8,16 +8,18 @@
 	const labelsContainer = document.getElementById('labels');
 
 	function addError(error) {
-		const pre = document.createElement('pre');
+		const li = document.createElement('li');
+		const pre = li.appendChild(document.createElement('pre'));
+
 		pre.textContent = typeof error === 'string'
 			? error.trim()
 			: JSON.stringify(error, null, '  ');
 
 		if (!errorsContainer.firstChild) {
-			errorsContainer.innerHTML = '<details><summary>Foutmeldingen</summary></details>';
+			errorsContainer.innerHTML = '<details><summary>Foutmeldingen</summary><ol></ol></details>';
 		}
 
-		errorsContainer.firstChild.append(pre);
+		errorsContainer.querySelector('ol').append(li);
 	}
 
 	/* Handle file input. */
@@ -159,7 +161,7 @@
 
 
 				/* Show the number of errors. */
-				const numErrors = document.querySelectorAll('#errors summary ~ pre').length;
+				const numErrors = document.querySelectorAll('#errors li').length;
 				if (numErrors) {
 					document.querySelector('#errors summary').textContent += ` (${numErrors})`;
 				}
