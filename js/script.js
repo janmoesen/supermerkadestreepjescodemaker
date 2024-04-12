@@ -46,7 +46,7 @@
 				}
 
 				/* Turn the raw data into printable labels. */
-				labelsContainer.textContent = '';
+				labelsContainer.innerHTML = '<ul></ul>';
 				results.data.forEach(record => {
 					let [description, barcode, sku, socialPrice, regularPrice] = record;
 
@@ -114,7 +114,9 @@
 					barcodeContainer.classList.add('barcode');
 					// TODO: JSBarcode it
 
-					labelsContainer.append(labelContainer);
+					const li = document.createElement('li');
+					li.append(labelContainer);
+					labelsContainer.firstChild.append(li);
 				});
 			}
 		});
