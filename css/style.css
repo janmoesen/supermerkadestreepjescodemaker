@@ -21,6 +21,10 @@ p {
 	margin: 1em 0 0 0;
 }
 
+summary {
+	cursor: pointer;
+}
+
 summary + p,
 p:first-child {
 	margin-top: 0;
