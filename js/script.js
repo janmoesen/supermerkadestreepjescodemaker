@@ -78,6 +78,14 @@
 
 	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => filterInput.oninput = applyFilters);
 
+	/* Open the filter form by default if any filters are active. */
+	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
+		if (filterInput.type ==='text' && filterInput.value.trim() !== '') {
+			filterInput.closest('details').open = true;
+		}
+	});
+
+
 	/* Handle button clicks. */
 	btnGenerate.onclick = event => {
 		event.preventDefault();
