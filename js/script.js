@@ -108,12 +108,13 @@
 					/* Fix a pet peeve of mine: `Ij` → `IJ` / `Ĳ`. */
 					description = description.replace(/\bIj/g, 'IJ');
 
-					/* Only keep the first barcode. The field seems to contain the
-					 * 5-digit SKU as well, and lots of `ESC` control codes. */
-					barcode = barcode.replace(/[\n\u001C\u001D]/g, ' ').trim().split(' ')[0];
-
-					/* Some barcodes incorrectly have an extra digit in front. */
-					barcode = barcode.replace(/^[01](\d{13})$/, '$1');
+					/* Only keep the last (most recent) 13-digit barcode. The
+					 * field seems to contain the 5-digit SKU as well, and lots
+					 * of (mostly `ESC`) control codes. */
+					barcode = barcode.replace(/[\n\u001C\u001D]/g, ' ').trim()
+						.split(' ')
+						.filter(barcode => barcode.length === 13)
+						.pop() ?? '';
 
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
@@ -143,7 +144,7 @@
 					skuContainer.textContent = sku;
 					labelContainer.append(skuContainer);
 
-					if (barcode.length > 5) {
+					if (barcode.length === 13) {
 						const barcodeContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 						barcodeContainer.classList.add('barcode');
 						barcodeContainer.setAttribute('width', '100%');
