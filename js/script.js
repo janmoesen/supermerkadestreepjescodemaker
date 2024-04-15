@@ -85,7 +85,14 @@
 		filterStyleSheet.textContent = filterCss;
 	}
 
-	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => filterInput.oninput = applyFilters);
+	let filterTimeoutId;
+	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
+		filterInput.oninput = _ => {
+			clearTimeout(filterTimeoutId);
+
+			filterTimeoutId = setTimeout(applyFilters, 100);
+		};
+	});
 
 	/* Open the filter form by default if any filters are active. */
 	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
