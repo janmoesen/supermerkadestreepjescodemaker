@@ -144,11 +144,19 @@
 					labelContainer.append(skuContainer);
 
 					if (barcode.length > 5) {
+						/* Setting a tooltip on an SVG element does not seem to
+						 * work, at least not in Firefox and Safari. Wrap the
+						 * container inside another container, a normal DIV that
+						 * /can/ have a tooltip. */
+						const barcodeContainerContainer = document.createElement('div');
+						barcodeContainerContainer.classList.add('barcode');
+						barcodeContainerContainer.setAttribute('title', barcode);
+						labelContainer.append(barcodeContainerContainer);
+
 						const barcodeContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 						barcodeContainer.setAttribute('width', '100%');
 						barcodeContainer.setAttribute('height', '100%');
-						barcodeContainer.classList.add('barcode');
-						labelContainer.append(barcodeContainer);
+						barcodeContainerContainer.append(barcodeContainer);
 
 						try {
 							JsBarcode(barcodeContainer, barcode, {
