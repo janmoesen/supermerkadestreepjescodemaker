@@ -42,6 +42,9 @@
 	/* Handle filter requests. */
 	const filterNamesToInputs = {
 		description: document.querySelector('.filterInput[name="description"]'),
+		hasBarcodeYes: document.querySelector('.filterInput[name="hasBarcode"][value="yes"]'),
+		hasBarcodeNo: document.querySelector('.filterInput[name="hasBarcode"][value="no"]'),
+		hasBarcodeWhatever: document.querySelector('.filterInput[name="hasBarcode"][value=""]'),
 	};
 
 	const filterStyleSheet = document.getElementById('filterCss');
@@ -79,6 +82,30 @@
 						display: none;
 					}
 				`;
+
+				return;
+			} else if (filterInput.type === 'radio') {
+				if (!filterInput.checked) {
+					return;
+				}
+
+				if (filterName === 'hasBarcodeYes') {
+					filterCss += `
+						#labels li:not([data-has-barcode="yes"]) {
+							display: none;
+						}
+					`;
+
+					return;
+				} else if (filterName === 'hasBarcodeNo') {
+					filterCss += `
+						#labels li:not([data-has-barcode="no"]) {
+							display: none;
+						}
+					`;
+
+					return;
+				}
 			}
 		});
 
@@ -97,6 +124,11 @@
 	/* Open the filter form by default if any filters are active. */
 	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
 		if (filterInput.type ==='text' && filterInput.value.trim() !== '') {
+			filterInput.closest('details').open = true;
+			return;
+		}
+
+		if (filterInput.type === 'radio' && filterInput.value.trim() !== '' && filterInput.checked) {
 			filterInput.closest('details').open = true;
 		}
 	});
@@ -187,6 +219,7 @@
 					/* Create the DOM structure for the label. */
 					const li = document.createElement('li');
 					li.dataset.description = ` ${description.toLowerCase()}  ${barcode.toLowerCase()} ${sku.toLowerCase()} `;
+					li.dataset.hasBarcode = 'no';
 
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
@@ -235,6 +268,9 @@
 							});
 
 							barcodeContainer.removeAttribute('style');
+
+							li.dataset.hasBarcode = 'yes';
+
 						} catch (e) {
 							addError(`JsBarcode: ${typeof e === 'string' ? e : JSON.stringify(e, null, ' ')} in record: ${JSON.stringify(recordObject, null, ' ')}`);
 						}

@@ -64,6 +64,10 @@ input[type="file"] {
 	font: inherit;
 }
 
+#filterForm li {
+	list-style: none;
+}
+
 #filterForm .tip {
 	font-size: 90%;
 }
