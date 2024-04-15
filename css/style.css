@@ -64,6 +64,10 @@ input[type="file"] {
 	font: inherit;
 }
 
+#filterForm .tip {
+	font-size: 90%;
+}
+
 /* Errors */
 #errors:not(:empty) {
 	margin-bottom: 2em;

@@ -61,9 +61,18 @@
 			if (filterInput.type === 'text') {
 				const words = filterInput.value.trim().toLowerCase().split(/\s+/g);
 
-				const attributeSelectors = words.map(
-					word => `[data-${filterName}*=" ${escapeCssAttributeSelectorValue(word.toLowerCase())}"]`
-				);
+				const attributeSelectors = words.map(word => {
+					/* Anchor search terms to the beginning of words in the text,
+					 * unless the search term starts with an asterisk, a.k.a. the
+					 * international wildcard symbol. */
+					let charBeforeWord = ' ';
+					if (word.startsWith('*')) {
+						charBeforeWord = '';
+						word = word.replace(/^\*+/, '');
+					}
+
+					return `[data-${filterName}*="${charBeforeWord}${escapeCssAttributeSelectorValue(word.toLowerCase())}"]`;
+				});
 
 				filterCss += `
 					#labels li:not(${attributeSelectors.join('')}) {
