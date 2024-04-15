@@ -57,6 +57,13 @@ input[type="file"] {
 	background: #eef;
 }
 
+#filterForm input:not([type]),
+#filterForm input[type="text"] {
+	width: 100%;
+	padding: 0.25em;
+	font: inherit;
+}
+
 /* Errors */
 #errors:not(:empty) {
 	margin-bottom: 2em;

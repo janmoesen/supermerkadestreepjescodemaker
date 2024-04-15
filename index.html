@@ -2,6 +2,7 @@
 <meta charset="UTF-8">
 <title>Streepjescodemaker voor de Supermerkade</title>
 <link rel="stylesheet" href="css/style.css">
+<style id="filterCss"></style>
 <script src="js/papaparse.min.js"></script>
 <script src="js/JsBarcode.all.min.js"></script>
 
@@ -38,6 +39,11 @@
 	<p><input type="file">
 
 	<p><input type="button" value="✨ Maak streepjescodes ✨" disabled>
+
+	<details id="filterForm">
+		<summary>Filter</summary>
+		<p><label><span>Omschrijving of code: </span><input name="description" class="filterInput" placeholder="Filter op omschrijving of streepjescode…"></label></p>
+	</details>
 </form>
 
 <div id="errors"></div>

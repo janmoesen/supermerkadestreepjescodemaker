@@ -39,6 +39,45 @@
 		}
 	};
 
+	/* Handle filter requests. */
+	const filterNamesToInputs = {
+		description: document.querySelector('.filterInput[name="description"]'),
+	};
+
+	const filterStyleSheet = document.getElementById('filterCss');
+
+	function escapeCssAttributeSelectorValue(str) {
+		return str.replaceAll('"', '\\"');
+	}
+
+	function applyFilters() {
+		let filterCss = '';
+
+		Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
+			if (filterInput.value.trim() === '') {
+				return;
+			}
+
+			if (filterInput.type === 'text') {
+				const words = filterInput.value.trim().toLowerCase().split(/\s+/g);
+
+				const attributeSelectors = words.map(
+					word => `[data-${filterName}*=" ${escapeCssAttributeSelectorValue(word.toLowerCase())}"]`
+				);
+
+				filterCss += `
+					#labels li:not(${attributeSelectors.join('')}) {
+						display: none;
+					}
+				`;
+			}
+		});
+
+		filterStyleSheet.textContent = filterCss;
+	}
+
+	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => filterInput.oninput = applyFilters);
+
 	/* Handle button clicks. */
 	btnGenerate.onclick = event => {
 		event.preventDefault();
@@ -111,7 +150,7 @@
 					}
 
 					/* Fix a pet peeve of mine: `Ij` → `IJ` / `Ĳ`. */
-					description = description.replace(/\bIj/g, 'IJ');
+					description = description.trim().replace(/\bIj/g, 'IJ');
 
 					/* Only keep the last (most recent) supported barcode. The
 					 * field seems to contain the 5-digit SKU as well, and lots
@@ -121,8 +160,13 @@
 						.filter(barcode => barcodeLengthsToTypes[barcode.length])
 						.pop() ?? '';
 
+					/* Create the DOM structure for the label. */
+					const li = document.createElement('li');
+					li.dataset.description = ` ${description.toLowerCase()}  ${barcode.toLowerCase()} `;
+
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
+					li.append(labelContainer);
 
 					const descriptionContainer = document.createElement('div');
 					descriptionContainer.classList.add('description');
@@ -172,8 +216,6 @@
 						}
 					}
 
-					const li = document.createElement('li');
-					li.append(labelContainer);
 					labelsContainer.firstChild.append(li);
 				});
 
@@ -183,8 +225,10 @@
 				if (numErrors) {
 					document.querySelector('#errors summary').textContent += ` (${numErrors})`;
 				}
+
+				/* Apply any filters that were already set before parsing. */
+				applyFilters();
 			}
 		});
-
 	};
 })();
