@@ -7,6 +7,11 @@
 	const rawDataContainer = document.getElementById('rawData');
 	const labelsContainer = document.getElementById('labels');
 
+	const barcodeLengthsToTypes = {
+		8: 'EAN8',
+		13: 'EAN13',
+	};
+
 	function addError(error) {
 		const li = document.createElement('li');
 		const pre = li.appendChild(document.createElement('pre'));
@@ -108,12 +113,12 @@
 					/* Fix a pet peeve of mine: `Ij` → `IJ` / `Ĳ`. */
 					description = description.replace(/\bIj/g, 'IJ');
 
-					/* Only keep the last (most recent) 13-digit barcode. The
+					/* Only keep the last (most recent) supported barcode. The
 					 * field seems to contain the 5-digit SKU as well, and lots
 					 * of (mostly `ESC`) control codes. */
-					barcode = barcode.replace(/[\n\u001C\u001D]/g, ' ').trim()
+					barcode = barcode.replace(/[\n\u001C\u001D]+/g, ' ').trim()
 						.split(' ')
-						.filter(barcode => barcode.length === 13)
+						.filter(barcode => barcodeLengthsToTypes[barcode.length])
 						.pop() ?? '';
 
 					const labelContainer = document.createElement('div');
@@ -144,7 +149,7 @@
 					skuContainer.textContent = sku;
 					labelContainer.append(skuContainer);
 
-					if (barcode.length === 13) {
+					if (barcodeLengthsToTypes[barcode.length]) {
 						const barcodeContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 						barcodeContainer.classList.add('barcode');
 						barcodeContainer.setAttribute('width', '100%');
@@ -154,7 +159,7 @@
 
 						try {
 							JsBarcode(barcodeContainer, barcode, {
-								format: 'EAN13',
+								format: barcodeLengthsToTypes[barcode.length],
 								flat: true,
 								displayValue: false,
 								width: 1,
