@@ -179,7 +179,7 @@
 
 					/* Create the DOM structure for the label. */
 					const li = document.createElement('li');
-					li.dataset.description = ` ${description.toLowerCase()}  ${barcode.toLowerCase()} `;
+					li.dataset.description = ` ${description.toLowerCase()}  ${barcode.toLowerCase()} ${sku.toLowerCase()} `;
 
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
