@@ -84,6 +84,7 @@ input[type="file"] {
 /* Labels */
 #labels {
 	width: 220mm;
+	text-align: center;
 }
 
 #labels ul,
