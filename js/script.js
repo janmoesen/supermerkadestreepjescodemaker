@@ -297,4 +297,20 @@
 			}
 		});
 	};
+
+	/* Alternate between tips, if there are multiple tips. */
+	document.querySelectorAll('.tip').forEach(tip => {
+		const allTips = [{sortKey: Math.random(), html: tip.innerHTML}];
+		let alternativeTipElement = tip.nextElementSibling;
+		while (alternativeTipElement?.tagName === 'TEMPLATE') {
+			allTips.push({
+				sortKey: Math.random(),
+				html: alternativeTipElement.content.firstElementChild?.innerHTML
+			});
+			alternativeTipElement = alternativeTipElement.nextElementSibling;
+		}
+
+		const randomTipHtml = allTips.sort((a, b) => a.sortKey - b.sortKey)[0].html;
+		tip.innerHTML = randomTipHtml;
+	});
 })();
