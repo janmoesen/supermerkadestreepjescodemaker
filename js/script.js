@@ -89,17 +89,9 @@
 					return;
 				}
 
-				if (filterName === 'hasBarcodeYes') {
+				if (filterInput.name === 'hasBarcode') {
 					filterCss += `
-						#labels li:not([data-has-barcode="yes"]) {
-							display: none;
-						}
-					`;
-
-					return;
-				} else if (filterName === 'hasBarcodeNo') {
-					filterCss += `
-						#labels li:not([data-has-barcode="no"]) {
+						#labels li:not([data-has-barcode="${escapeCssAttributeSelectorValue(filterInput.value)}"]) {
 							display: none;
 						}
 					`;
