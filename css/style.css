@@ -66,6 +66,7 @@ input[type="file"] {
 
 #filterForm li {
 	list-style: none;
+	margin-top: 0.125em;
 }
 
 #filterForm .tip {
