@@ -42,9 +42,14 @@
 	/* Handle filter requests. */
 	const filterNamesToInputs = {
 		description: document.querySelector('.filterInput[name="description"]'),
+
 		hasBarcodeYes: document.querySelector('.filterInput[name="hasBarcode"][value="yes"]'),
 		hasBarcodeNo: document.querySelector('.filterInput[name="hasBarcode"][value="no"]'),
 		hasBarcodeWhatever: document.querySelector('.filterInput[name="hasBarcode"][value=""]'),
+
+		barcodeLength13: document.querySelector('.filterInput[name="barcodeLength"][value="13"]'),
+		barcodeLength8: document.querySelector('.filterInput[name="barcodeLength"][value="8"]'),
+		barcodeLengthWhatever: document.querySelector('.filterInput[name="barcodeLength"][value=""]'),
 	};
 
 	const filterStyleSheet = document.getElementById('filterCss');
@@ -92,6 +97,14 @@
 				if (filterInput.name === 'hasBarcode') {
 					filterCss += `
 						#labels li:not([data-has-barcode="${escapeCssAttributeSelectorValue(filterInput.value)}"]) {
+							display: none;
+						}
+					`;
+
+					return;
+				} else if (filterInput.name === 'barcodeLength') {
+					filterCss += `
+						#labels li:not([data-barcode-length="${escapeCssAttributeSelectorValue(filterInput.value)}"]) {
 							display: none;
 						}
 					`;
@@ -212,6 +225,7 @@
 					const li = document.createElement('li');
 					li.dataset.description = ` ${description.toLowerCase()}  ${barcode.toLowerCase()} ${sku.toLowerCase()} `;
 					li.dataset.hasBarcode = 'no';
+					li.dataset.barcodeLength = barcode.length;
 
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
