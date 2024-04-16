@@ -27,6 +27,9 @@
 		errorsContainer.querySelector('ol').append(li);
 	}
 
+	/* Disable the default form submission (e.g. by pressing Enter). */
+	fileInput.form.onsubmit = event => event.preventDefault();
+
 	/* Handle file input. */
 	fileInput.oninput = event => {
 		btnGenerate.disabled = true;
