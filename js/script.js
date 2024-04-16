@@ -61,6 +61,32 @@
 		return str.replaceAll('"', '\\"');
 	}
 
+	/* Ignore accents and some other common (in Belgium) non-ASCII things when
+	 * filtering. */
+	 const unicodeToAsciiReplacements = {
+		 'æ': 'ae',
+		 'œ': 'oe',
+		 'ø': 'o',
+		 '‘': "'",
+		 '’': "'",
+		 '“': '"',
+		 '”': '"',
+	 };
+
+	const unicodeToAsciiReplacementsRegExp = new RegExp(Object.keys(unicodeToAsciiReplacements).join('|'), 'g');
+
+	/**
+	 * Normalize a string for filtering. There is no built-in iconv-like
+	 * transliteration yet, so use Unicode Canonical Decomposition, get rid of
+	 * the diacritics, and then replace some other things like digraphs.
+	 */
+	function normalizeForFiltering(str) {
+		let normalizedString = str.trim().toLowerCase().normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '');
+		normalizedString = normalizedString.replaceAll(unicodeToAsciiReplacementsRegExp, unicode => unicodeToAsciiReplacements[unicode]);
+
+		return normalizedString;
+	}
+
 	function applyFilters() {
 		let filterCss = '';
 
@@ -70,7 +96,7 @@
 			}
 
 			if (filterInput.type === 'text') {
-				const words = filterInput.value.trim().toLowerCase().split(/\s+/g);
+				const words = normalizeForFiltering(filterInput.value).split(/\s+/g);
 
 				const attributeSelectors = words.map(word => {
 					/* Anchor search terms to the beginning of words in the text,
@@ -226,7 +252,7 @@
 
 					/* Create the DOM structure for the label. */
 					const li = document.createElement('li');
-					li.dataset.description = ` ${description.toLowerCase()}  ${barcode.toLowerCase()} ${sku.toLowerCase()} `;
+					li.dataset.description = ` ${normalizeForFiltering(description.toLowerCase())}  ${barcode.toLowerCase()} ${sku.toLowerCase()} `;
 					li.dataset.hasBarcode = 'no';
 					li.dataset.barcodeLength = barcode.length;
 
