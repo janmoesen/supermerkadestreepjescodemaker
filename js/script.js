@@ -44,15 +44,13 @@
 
 	/* Handle filter requests. */
 	const filterNamesToInputs = {
-		description: document.querySelector('.filterInput[name="description"]'),
+		description: document.querySelector('#filterForm input[name="description"]'),
 
-		hasBarcodeYes: document.querySelector('.filterInput[name="hasBarcode"][value="yes"]'),
-		hasBarcodeNo: document.querySelector('.filterInput[name="hasBarcode"][value="no"]'),
-		hasBarcodeWhatever: document.querySelector('.filterInput[name="hasBarcode"][value=""]'),
-
-		barcodeLength13: document.querySelector('.filterInput[name="barcodeLength"][value="13"]'),
-		barcodeLength8: document.querySelector('.filterInput[name="barcodeLength"][value="8"]'),
-		barcodeLengthWhatever: document.querySelector('.filterInput[name="barcodeLength"][value=""]'),
+		barcodeLengthGreaterThanZero: document.querySelector('#filterForm input[name="barcodeLength"][value=">0"]'),
+		barcodeLength13: document.querySelector('#filterForm input[name="barcodeLength"][value="13"]'),
+		barcodeLength8: document.querySelector('#filterForm input[name="barcodeLength"][value="8"]'),
+		barcodeLength0: document.querySelector('#filterForm input[name="barcodeLength"][value="0"]'),
+		barcodeLengthWhatever: document.querySelector('#filterForm input[name="barcodeLength"][value=""]'),
 	};
 
 	const filterStyleSheet = document.getElementById('filterCss');
@@ -123,20 +121,21 @@
 					return;
 				}
 
-				if (filterInput.name === 'hasBarcode') {
-					filterCss += `
-						#labels li:not([data-has-barcode="${escapeCssAttributeSelectorValue(filterInput.value)}"]) {
-							display: none;
-						}
-					`;
-
-					return;
-				} else if (filterInput.name === 'barcodeLength') {
-					filterCss += `
-						#labels li:not([data-barcode-length="${escapeCssAttributeSelectorValue(filterInput.value)}"]) {
-							display: none;
-						}
-					`;
+				if (filterInput.name === 'barcodeLength') {
+					if (filterInput.value === '>0') {
+						filterCss += `
+							#labels li:not([data-barcode-length]),
+							#labels li[data-barcode-length="0"] {
+								display: none;
+							}
+						`;
+					} else {
+						filterCss += `
+							#labels li:not([data-barcode-length="${escapeCssAttributeSelectorValue(filterInput.value)}"]) {
+								display: none;
+							}
+						`;
+					}
 
 					return;
 				}
@@ -253,7 +252,6 @@
 					/* Create the DOM structure for the label. */
 					const li = document.createElement('li');
 					li.dataset.description = ` ${normalizeForFiltering(description.toLowerCase())}  ${barcode.toLowerCase()} ${sku.toLowerCase()} `;
-					li.dataset.hasBarcode = 'no';
 					li.dataset.barcodeLength = barcode.length;
 
 					const labelContainer = document.createElement('div');
@@ -303,9 +301,6 @@
 							});
 
 							barcodeContainer.removeAttribute('style');
-
-							li.dataset.hasBarcode = 'yes';
-
 						} catch (e) {
 							addError(`JsBarcode: ${typeof e === 'string' ? e : JSON.stringify(e, null, ' ')} in record: ${JSON.stringify(recordObject, null, ' ')}`);
 						}
