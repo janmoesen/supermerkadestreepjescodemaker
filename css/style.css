@@ -83,6 +83,10 @@ input[type="file"] {
 }
 
 /* Labels */
+#counter span {
+	font-weight: normal;
+}
+
 #labels {
 	width: 220mm;
 	text-align: center;

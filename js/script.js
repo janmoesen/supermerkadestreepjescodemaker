@@ -143,6 +143,16 @@
 		});
 
 		filterStyleSheet.textContent = filterCss;
+
+		/* Show the number of (filtered) labels. */
+		const numLabelsPerPrintedPage = 21;
+		const counterContainer = document.getElementById('counter');
+		const numFilteredLabels = Array.from(document.querySelectorAll('#labels li'))
+			.filter(label => label.offsetHeight > 0)
+			.length;
+		counterContainer.innerHTML = counterContainer.dataset.htmlTemplate
+			.replace('%d', numFilteredLabels)
+			.replace('%d', Math.ceil(numFilteredLabels / numLabelsPerPrintedPage));
 	}
 
 	let filterTimeoutId;
