@@ -177,6 +177,56 @@
 	});
 
 
+	/* Sort the labels. */
+	function applySorting() {
+		const sortKey = document.querySelector('input[name="sortBy"]:checked')?.value;
+		if (!sortKey) {
+			return;
+		}
+
+		const isSortKeyPrice = sortKey === 'regularPrice' || sortKey === 'socialPrice';
+
+		const isSortedAscending = !!document.querySelector('input[name="sortAscending"]:checked');
+
+		let allLabels = Array.from(labelsContainer.querySelectorAll('li'));
+		if (!allLabels.length) {
+			return;
+		}
+
+		allLabels = allLabels.sort((a, b) => {
+			const valueA = isSortKeyPrice
+				? parseFloat(a.dataset[sortKey].replace(',', '.'))
+				: a.dataset[sortKey].trim();
+			const valueB = isSortKeyPrice
+				? parseFloat(b.dataset[sortKey].replace(',', '.'))
+				: b.dataset[sortKey].trim();
+
+			let comparisonValue = valueA < valueB
+				? -1
+				: (valueA === valueB ? 0 : 1);
+
+			if (!isSortedAscending) {
+				comparisonValue *= -1;
+			}
+
+			return comparisonValue;
+		});
+
+		// NOTE: calling `allLabels[0].parentNode.append(allLabels)` does not
+		// re-add the labels in the new order. Would have been simpler.
+		allLabels.forEach(label => allLabels[0].parentNode.appendChild(label));
+	}
+
+	let sortTimeoutId;
+	document.querySelectorAll('#filterForm input[name="sortBy"], #filterForm input[name="sortAscending"]').forEach(filterInput => {
+		filterInput.oninput = _ => {
+			clearTimeout(sortTimeoutId);
+
+			sortTimeoutId = setTimeout(applySorting, 100);
+		};
+	});
+
+
 	/* Handle button clicks. */
 	btnGenerate.onclick = event => {
 		event.preventDefault();
@@ -263,6 +313,10 @@
 					const li = document.createElement('li');
 					li.dataset.description = ` ${normalizeForFiltering(description.toLowerCase())}  ${barcode.toLowerCase()} ${sku.toLowerCase()} `;
 					li.dataset.barcodeLength = barcode.length;
+					li.dataset.barcode = barcode;
+					li.dataset.sku = sku;
+					li.dataset.regularPrice = regularPrice;
+					li.dataset.socialPrice = socialPrice;
 
 					const labelContainer = document.createElement('div');
 					labelContainer.classList.add('label');
@@ -328,6 +382,9 @@
 
 				/* Apply any filters that were already set before parsing. */
 				applyFilters();
+
+				/* Apply any sorting that was already set before parsing. */
+				applySorting();
 			}
 		});
 	};
