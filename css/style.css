@@ -68,6 +68,10 @@ input[type="file"] {
 	font: inherit;
 }
 
+#filterForm select {
+	display: block;
+}
+
 #filterForm li {
 	list-style: none;
 	margin-top: 0.125em;
