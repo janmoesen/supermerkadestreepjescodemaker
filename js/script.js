@@ -3,6 +3,11 @@
 
 	const fileInput = document.querySelector('input[type="file"]');
 	const btnGenerate = document.querySelector('input[type="button"]');
+
+	const textFilterInput = document.querySelector('#filterForm [name="description"]');
+	const barcodeLengthFilterInput = document.querySelector('#filterForm [name="barcodeLength"]');
+	const sortInput = document.querySelector('#filterForm [name="sortBy"]');
+
 	const errorsContainer = document.getElementById('errors');
 	const rawDataContainer = document.getElementById('rawData');
 	const labelsContainer = document.getElementById('labels');
@@ -42,17 +47,7 @@
 		}
 	};
 
-	/* Handle filter requests. */
-	const filterNamesToInputs = {
-		description: document.querySelector('#filterForm input[name="description"]'),
-
-		barcodeLengthGreaterThanZero: document.querySelector('#filterForm input[name="barcodeLength"][value=">0"]'),
-		barcodeLength13: document.querySelector('#filterForm input[name="barcodeLength"][value="13"]'),
-		barcodeLength8: document.querySelector('#filterForm input[name="barcodeLength"][value="8"]'),
-		barcodeLength0: document.querySelector('#filterForm input[name="barcodeLength"][value="0"]'),
-		barcodeLengthWhatever: document.querySelector('#filterForm input[name="barcodeLength"][value=""]'),
-	};
-
+	/* Filtering and sorting. */
 	const filterStyleSheet = document.getElementById('filterCss');
 
 	function escapeCssAttributeSelectorValue(str) {
@@ -85,62 +80,53 @@
 		return normalizedString;
 	}
 
+	/**
+	 * Apply the filters specified by the user in the UI.
+	 */
 	function applyFilters() {
 		let filterCss = '';
 
-		Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
-			if (filterInput.value.trim() === '') {
-				return;
-			}
+		/* Text filter (description, barcode, sku). */
+		if (textFilterInput.value.trim() !== '') {
+			const words = normalizeForFiltering(textFilterInput.value).split(/\s+/g);
 
-			if (filterInput.type === 'text') {
-				const words = normalizeForFiltering(filterInput.value).split(/\s+/g);
+			const attributeSelectors = words.map(word => {
+				/* Anchor search terms to the beginning of words in the text,
+				 * unless the search term starts with an asterisk, a.k.a. the
+				 * international wildcard symbol. */
+				let charBeforeWord = ' ';
+				if (word.startsWith('*')) {
+					charBeforeWord = '';
+					word = word.replace(/^\*+/, '');
+				}
 
-				const attributeSelectors = words.map(word => {
-					/* Anchor search terms to the beginning of words in the text,
-					 * unless the search term starts with an asterisk, a.k.a. the
-					 * international wildcard symbol. */
-					let charBeforeWord = ' ';
-					if (word.startsWith('*')) {
-						charBeforeWord = '';
-						word = word.replace(/^\*+/, '');
-					}
+				return `[data-description*="${charBeforeWord}${escapeCssAttributeSelectorValue(word.toLowerCase())}"]`;
+			});
 
-					return `[data-${filterName}*="${charBeforeWord}${escapeCssAttributeSelectorValue(word.toLowerCase())}"]`;
-				});
+			filterCss += `
+				#labels li:not(${attributeSelectors.join('')}) {
+					display: none;
+				}
+			`;
+		}
 
+		/* Barcode length filter. */
+		if (barcodeLengthFilterInput.value !== '') {
+			if (barcodeLengthFilterInput.value === '>0') {
 				filterCss += `
-					#labels li:not(${attributeSelectors.join('')}) {
+					#labels li:not([data-barcode-length]),
+					#labels li[data-barcode-length="0"] {
 						display: none;
 					}
 				`;
-
-				return;
-			} else if (filterInput.type === 'radio') {
-				if (!filterInput.checked) {
-					return;
-				}
-
-				if (filterInput.name === 'barcodeLength') {
-					if (filterInput.value === '>0') {
-						filterCss += `
-							#labels li:not([data-barcode-length]),
-							#labels li[data-barcode-length="0"] {
-								display: none;
-							}
-						`;
-					} else {
-						filterCss += `
-							#labels li:not([data-barcode-length="${escapeCssAttributeSelectorValue(filterInput.value)}"]) {
-								display: none;
-							}
-						`;
+			} else {
+				filterCss += `
+					#labels li:not([data-barcode-length="${escapeCssAttributeSelectorValue(barcodeLengthFilterInput.value)}"]) {
+						display: none;
 					}
-
-					return;
-				}
+				`;
 			}
-		});
+		}
 
 		filterStyleSheet.textContent = filterCss;
 
@@ -155,31 +141,27 @@
 			.replace('%d', Math.ceil(numFilteredLabels / numLabelsPerPrintedPage));
 	}
 
+	/* Apply the filters when updating the inputs. */
 	let filterTimeoutId;
-	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
-		filterInput.oninput = _ => {
-			clearTimeout(filterTimeoutId);
+	textFilterInput.oninput = _ => {
+		clearTimeout(filterTimeoutId);
 
-			filterTimeoutId = setTimeout(applyFilters, 100);
-		};
-	});
+		filterTimeoutId = setTimeout(applyFilters, 100);
+	};
+
+	barcodeLengthFilterInput.oninput = applyFilters;
 
 	/* Open the filter form by default if any filters are active. */
-	Object.entries(filterNamesToInputs).forEach(([filterName, filterInput]) => {
-		if (filterInput.type ==='text' && filterInput.value.trim() !== '') {
-			filterInput.closest('details').open = true;
-			return;
-		}
-
-		if (filterInput.type === 'radio' && filterInput.value.trim() !== '' && filterInput.checked) {
-			filterInput.closest('details').open = true;
-		}
-	});
+	if (textFilterInput.value.trim() !== '' || barcodeLengthFilterInput.value !== '') {
+		textFilterInput.closest('details').open = true;
+	}
 
 
-	/* Sort the labels. */
+	/**
+	 * Sort the labels as specified by the user in the UI.
+	 */
 	function applySorting() {
-		const [sortKey, sortDirection] = document.querySelector('[name="sortBy"]')?.value.split(';');
+		const [sortKey, sortDirection] = sortInput.value.split(';');
 		if (!sortKey) {
 			return;
 		}
@@ -217,7 +199,8 @@
 		allLabels.forEach(label => allLabels[0].parentNode.appendChild(label));
 	}
 
-	document.querySelector('#filterForm [name="sortBy"]').oninput = applySorting;
+	/* Sort the labels when updating the inputs. */
+	sortInput.oninput = applySorting;
 
 
 	/* Handle button clicks. */

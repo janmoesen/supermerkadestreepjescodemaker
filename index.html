@@ -54,14 +54,14 @@
 		</p>
 
 		<p>
-		Streepjescode:
-		<ul>
-			<li><label><input type="radio" name="barcodeLength" value="" checked> Alle producten</label><br>
-			<li><label><input type="radio" name="barcodeLength" value="&gt;0"> Alle producten met een streepjescode</label><br>
-			<li><label><input type="radio" name="barcodeLength" value="13"> Enkel producten met een streepjescode van 13 cijfers</label><br>
-			<li><label><input type="radio" name="barcodeLength" value="8"> Enkel producten met een streepjescode van 8 cijfers</label><br>
-			<li><label><input type="radio" name="barcodeLength" value="0"> Enkel producten zonder streepjescode</label><br>
-		</ul>
+		Filter op type streepjescode:
+		<select name="barcodeLength">
+			<option value="">Toon alle producten</option>
+			<option value="&gt;0">Toon enkel producten met een streepjescode</option>
+			<option value="13">Toon enkel producten met een streepjescode van 13 cijfers</option>
+			<option value="8">Toon enkel producten met een streepjescode van 8 cijfers</option>
+			<option value="0">Toon enkel producten zonder streepjescode</option>
+		</select>
 
 		<p>
 		<label>Sorteer op:
