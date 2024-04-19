@@ -57,6 +57,10 @@ input[type="file"] {
 	background: #eef;
 }
 
+#filterForm ::placeholder {
+	font-style: italic;
+}
+
 #filterForm input:not([type]),
 #filterForm input[type="text"] {
 	width: 100%;
