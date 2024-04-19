@@ -26,9 +26,9 @@ details summary ~ * {
 }
 
 details ul,
-details li {
+details ul li {
 	margin: 0;
-	list-style-position: inside;
+	list-style: inside;
 }
 
 summary {
