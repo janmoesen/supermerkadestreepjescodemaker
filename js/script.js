@@ -17,6 +17,9 @@
 		13: 'EAN13',
 	};
 
+	/**
+	 * Add an error to the on-page error log.
+	 */
 	function addError(error) {
 		const li = document.createElement('li');
 		const pre = li.appendChild(document.createElement('pre'));
@@ -50,6 +53,13 @@
 	/* Filtering and sorting. */
 	const filterStyleSheet = document.getElementById('filterCss');
 
+	/**
+	 * Escape a string so it can be used in a CSS attribute selector inside
+	 * double quotes.
+	 *
+	 * E.g. `[data-foo="${escapeCssAttributeSelectorValue('bar " baz')}"]`
+	 * gives `[data-foo="bar \" baz"]`
+	 */
 	function escapeCssAttributeSelectorValue(str) {
 		return str.replaceAll('"', '\\"');
 	}
