@@ -1,13 +1,6 @@
 (_ => {
 	'use strict';
 
-	const fileInput = document.querySelector('input[type="file"]');
-	const btnGenerate = document.querySelector('input[type="button"]');
-
-	const textFilterInput = document.querySelector('#filterForm [name="description"]');
-	const barcodeLengthFilterInput = document.querySelector('#filterForm [name="barcodeLength"]');
-	const sortInput = document.querySelector('#filterForm [name="sortBy"]');
-
 	const errorsContainer = document.getElementById('errors');
 	const rawDataContainer = document.getElementById('rawData');
 	const labelsContainer = document.getElementById('labels');
@@ -35,22 +28,14 @@
 		errorsContainer.querySelector('ol').append(li);
 	}
 
-	/* Disable the default form submission (e.g. by pressing Enter). */
-	fileInput.form.onsubmit = event => event.preventDefault();
 
-	/* Handle file input. */
-	fileInput.oninput = event => {
-		btnGenerate.disabled = true;
+	/* ===================================================================
+	 * Filtering and sorting.
+	 * =================================================================== */
+	const textFilterInput = document.querySelector('#filterForm [name="description"]');
+	const barcodeLengthFilterInput = document.querySelector('#filterForm [name="barcodeLength"]');
+	const sortInput = document.querySelector('#filterForm [name="sortBy"]');
 
-		if (fileInput.files[0]) {
-			btnGenerate.disabled = false;
-
-			/* Automatically click after selecting a file. */
-			btnGenerate.click();
-		}
-	};
-
-	/* Filtering and sorting. */
 	const filterStyleSheet = document.getElementById('filterCss');
 
 	/**
@@ -166,7 +151,6 @@
 		textFilterInput.closest('details').open = true;
 	}
 
-
 	/**
 	 * Sort the labels as specified by the user in the UI.
 	 */
@@ -212,6 +196,27 @@
 	/* Sort the labels when updating the inputs. */
 	sortInput.oninput = applySorting;
 
+
+	/* ===================================================================
+	 * File handling and parsing.
+	 * =================================================================== */
+	const fileInput = document.querySelector('input[type="file"]');
+	const btnGenerate = document.querySelector('input[type="button"]');
+
+	/* Disable the default form submission (e.g. by pressing Enter). */
+	fileInput.form.onsubmit = event => event.preventDefault();
+
+	/* Handle file input. */
+	fileInput.oninput = event => {
+		btnGenerate.disabled = true;
+
+		if (fileInput.files[0]) {
+			btnGenerate.disabled = false;
+
+			/* Automatically click after selecting a file. */
+			btnGenerate.click();
+		}
+	};
 
 	/* Handle button clicks. */
 	btnGenerate.onclick = event => {
@@ -359,7 +364,6 @@
 					labelsContainer.firstChild.append(li);
 				});
 
-
 				/* Show the number of errors. */
 				const numErrors = document.querySelectorAll('#errors li').length;
 				if (numErrors) {
@@ -375,6 +379,10 @@
 		});
 	};
 
+
+	/* ===================================================================
+	 * Miscellaneous.
+	 * =================================================================== */
 	/* Alternate between tips, if there are multiple tips. */
 	document.querySelectorAll('.tip').forEach(tip => {
 		const allTips = [{sortKey: Math.random(), html: tip.innerHTML}];
