@@ -179,14 +179,14 @@
 
 	/* Sort the labels. */
 	function applySorting() {
-		const sortKey = document.querySelector('input[name="sortBy"]:checked')?.value;
+		const [sortKey, sortDirection] = document.querySelector('[name="sortBy"]')?.value.split(';');
 		if (!sortKey) {
 			return;
 		}
 
 		const isSortKeyPrice = sortKey === 'regularPrice' || sortKey === 'socialPrice';
 
-		const isSortedAscending = !!document.querySelector('input[name="sortAscending"]:checked');
+		const isSortedAscending = sortDirection === 'asc';
 
 		let allLabels = Array.from(labelsContainer.querySelectorAll('li'));
 		if (!allLabels.length) {
@@ -217,14 +217,7 @@
 		allLabels.forEach(label => allLabels[0].parentNode.appendChild(label));
 	}
 
-	let sortTimeoutId;
-	document.querySelectorAll('#filterForm input[name="sortBy"], #filterForm input[name="sortAscending"]').forEach(filterInput => {
-		filterInput.oninput = _ => {
-			clearTimeout(sortTimeoutId);
-
-			sortTimeoutId = setTimeout(applySorting, 100);
-		};
-	});
+	document.querySelector('#filterForm [name="sortBy"]').oninput = applySorting;
 
 
 	/* Handle button clicks. */

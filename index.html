@@ -64,14 +64,19 @@
 		</ul>
 
 		<p>
-		Sorteer:
-		<ul>
-			<li><label><input type="radio" name="sortBy" value="description"> Op productnaam</label><br>
-			<li><label><input type="radio" name="sortBy" value="sku"> Op productcode</label><br>
-			<li><label><input type="radio" name="sortBy" value="regularPrice"> Op gewone (solidaire) prijs</label><br>
-			<li><label><input type="radio" name="sortBy" value="socialPrice"> Op sociale prijs</label><br>
-			<li><label><input type="checkbox" name="sortAscending" checked> Van A naar Z / van klein naar groot</label><br>
-		</ul>
+		<label>Sorteer op:
+		<select name="sortBy">
+			<option value=""></option>
+			<option value="description;asc">Productnaam, van A naar Z</option>
+			<option value="description;desc">Productnaam, van Z naar A</option>
+			<option value="sku;asc">Productcode, oudste eerst</option>
+			<option value="sku;desc">Productcode, nieuwste eerst</option>
+			<option value="regularPrice;asc">Gewone (solidaire) prijs, laagste eerst</option>
+			<option value="regularPrice;desc">Gewone (solidaire) prijs, hoogste eerst</option>
+			<option value="socialPrice;asc">Sociale prijs, laagste eerst</option>
+			<option value="socialPrice;desc">Sociale prijs, hoogste eerst</option>
+		</select>
+		</label>
 	</details>
 </form>
 
